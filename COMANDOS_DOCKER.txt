@@ -1,0 +1,42 @@
+COMANDOS UTILIZADOS EN EL CURSO DE UDEMY SOBRE DOCKER
+
+// Correr un contenedor de mysql
+- docker container run -d -p 3306:3306 --name db -e MYSQL_RANDOM_ROOT_PASSWORD=yes mysql
+- docker container logs db --> Buscamos la contraseña que nos genero para utilizar el contenedor
+
+// Correr un contenedor de httpd
+- docker container run -d --name webserver -p 8080:80 httpd
+
+// Correr un contenedor de nginx
+- docker container run -d --name proxy -p 80:80 nginx
+
+// Imagenes en MARIADB
+- docker container run -d -p 3306:3306 --name mariadbcontainer -e MYSQL_RANDOM_ROOT_PASSWORD=yes mariadb
+
+// Imagen de Linux Alpine
+- docker pull alpine
+- docker container run -it alpine sh --> Forma de ejecutar la linea de comandos del contenedor
+
+// CON --net=host
+- Podemos decirle a un contenedor que utilice la red de su host para trabajar
+
+// Ver el historial al crear una imagen de docker
+- docker image history <Nombre de la image> --> Muestras todas los layers de una imagen
+
+// Hacer un inspect de una image como tal
+- docker image inspect <Nombre de la imagen>
+
+// Cambiar el tag de una imagen por otro
+- docker image tag nginx bretfisher/nginx --> Cambia el nombre de la imagen con el tag nginx por emanuel684/nginx
+
+
+
+// SOLUCION A LA TAREA DE DNS Round Robin Test
+- docker network create dude
+- docker container run -d --net dude --net-alias search elasticsearch:2 
+- docker container run -d --net dude --net-alias search elasticsearch:2
+- docker container run --rm --net dude alpine:3:10 nslookup search
+- docker container run --rm --net dude centos curl -s search:9200
+
+// ASSIGNMENT: BUILD YOUR OWN IMAGE - DOCKERFILE
+- 
