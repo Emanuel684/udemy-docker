@@ -29,7 +29,20 @@ COMANDOS UTILIZADOS EN EL CURSO DE UDEMY SOBRE DOCKER
 // Cambiar el tag de una imagen por otro
 - docker image tag nginx bretfisher/nginx --> Cambia el nombre de la imagen con el tag nginx por emanuel684/nginx
 
+// Correr un contenedor de mysql
+- docker container run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=True mysql
 
+// Contenedor de mysql pero con volumen
+- docker container run -d --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=True -v mysql-db:/var/lib/mysql mysql
+
+// Inspeccionar un volumen
+- docker volumen inspec <Nombre del volumen>
+
+// Persisting Data: Bind Mounting
+""" Con los Bind Mount se comparten archivos entre el host y el contenedor, osea, se apuntan los directorios entre si """
+""" Se hace igual que un volumen, pero en ves de un nombre se ponen path de directorios """
+""" No se puede usar en un dockerfile """
+- docker container run -d --name nginx -p 80:80 -v ${pwd}:/usr/share/nginx/html nginx
 
 // SOLUCION A LA TAREA DE DNS Round Robin Test
 - docker network create dude
@@ -38,5 +51,45 @@ COMANDOS UTILIZADOS EN EL CURSO DE UDEMY SOBRE DOCKER
 - docker container run --rm --net dude alpine:3:10 nslookup search
 - docker container run --rm --net dude centos curl -s search:9200
 
-// ASSIGNMENT: BUILD YOUR OWN IMAGE - DOCKERFILE
+// ASSIGNMENT: NAMED VOLUMEN 
+""" Creamos un contenedor con una base de datos postgresql """
+- docker container run -d --name psql -v psql:/var/lib/postgresql/data postgres:9.6.1
+- docker container logs -f psql
+- docker container stop 
+- docker container run -d --name psql2 -v psql:/var/lib/postgresql/data postgres:9.6.2
+- docker volume ls
+- docker container logs psql2
+
+// POSTGRESQL IN A CONTIANER
+""" POSTGRES_PASSWORD=contraseña O POSTGRES_HOST_AUTH_METHOD=trust """
+- docker run POSTGRES_PASSWORD=mypassword
+
+// Eliminar los volumenes de un docker-compose
+- docker-compose down -v --> Termina un docker-compose y elimina los volumenes que utilizaba
+
+// DOCKER SWARM COMANDOS
+- docker swarm init
+- docker node ls
+- docker service --help
+- docker service create alpine ping 8.8.8.8
+- docker service update <ID> --replicas 3
+- docker service ps <NOMBRE_SERVICIO>
+- docker update --help
+- docker service update --help
+- docker container rm -f <NOMBRE_SERVICIO>.1.<ID>
+- docker service rm <NOMBRE_SERVICIO>
+
+// USANDO DOCKER-MACHINE
+- docker-machine create node1 --> Crea una nueva maquina vitual en local
+- docker-machine ssh node1 --> Permite conectarse a una maquina virtual local
+- docker-machine env node1 --> Funciona de la misma forma que el comando anterior
+- docker swarm init --advertise-addr <Ip address>
+- docker node update --role manager node2
+- docker swarm join-token manager
+- docker service create --replicas 3 alpine ping 8.8.8.8
+- docker node ps node2 --> Muestra los contenedores que estan corriendo en otra maquina virtual local
+- docker service ps <service name> --> Muestras las task que tiene un contenedor
 - 
+
+// CONECTARSE A DIGITALOCEAN
+- ssh root@[IP_VM] --> Hay que tener configurada la llave ssh
